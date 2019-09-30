@@ -13,7 +13,6 @@ export const items = [
   },
   {
     sys: { id: 1 },
-
     fields: {
       title: "samsung s7 - white",
       price: 20,
