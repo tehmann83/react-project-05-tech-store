@@ -1,5 +1,7 @@
 import React from "react";
 import { ProductConsumer } from "../context/Context";
+import Hero from "../components/Hero";
+import { Link } from "react-router-dom";
 
 export default function HomePage() {
   return (
@@ -9,7 +11,13 @@ export default function HomePage() {
           {
             /* console.log(value) */
           }
-          return <h1>home page!</h1>;
+          return (
+            <>
+              <Hero title="awesome gadgets" max="true">
+                <Link to="/products">our products</Link>
+              </Hero>
+            </>
+          );
         }}
       </ProductConsumer>
     </>
