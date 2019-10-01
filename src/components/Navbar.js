@@ -32,6 +32,7 @@ const NavWrapper = styled.nav`
   position: sticky;
   top: 0;
   width: 100%;
+  z-index: 1;
 
   .nav-center {
     align-items: center;
