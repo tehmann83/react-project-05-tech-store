@@ -38,14 +38,19 @@ class ProductProvider extends Component {
       return product;
     });
     let featuredProducts = storeProducts.filter(item => item.featured === true);
-    this.setState({
-      storeProducts,
-      filteredProducts: storeProducts,
-      featuredProducts,
-      cart: this.getStorageCart(),
-      singleProduct: this.getStorageProduct(),
-      loading: false
-    });
+    this.setState(
+      {
+        storeProducts,
+        filteredProducts: storeProducts,
+        featuredProducts,
+        cart: this.getStorageCart(),
+        singleProduct: this.getStorageProduct(),
+        loading: false
+      },
+      () => {
+        this.addTotals();
+      }
+    );
   };
 
   getStorageCart = () => {
@@ -56,9 +61,37 @@ class ProductProvider extends Component {
     return [];
   };
 
-  getTotals = () => {};
+  getTotals = () => {
+    let subTotal = 0;
+    let cartItems = 0;
+    this.state.cart.forEach(item => {
+      subTotal += item.total;
+      cartItems += item.count;
+    });
 
-  addTotals = () => {};
+    subTotal = parseFloat(subTotal.toFixed(2));
+    let tax = subTotal * 0.21;
+    tax = parseFloat(tax.toFixed(2));
+    let total = subTotal + tax;
+    total = parseFloat(total.toFixed(2));
+
+    return {
+      cartItems,
+      subTotal,
+      tax,
+      total
+    };
+  };
+
+  addTotals = () => {
+    const totals = this.getTotals();
+    this.setState({
+      cartItems: totals.cartItems,
+      cartSubTotal: totals.subTotal,
+      cartTax: totals.tax,
+      cartTotal: totals.total
+    });
+  };
 
   syncStorage = () => {};
 
@@ -77,13 +110,16 @@ class ProductProvider extends Component {
       tempItem.total = tempItem.price * tempItem.count;
       tempItem.total = parseFloat(tempItem.total.toFixed(2));
     }
-    this.setState({
-      cart: tempCart
-    }, () => {
-      this.addTotals();
-      this.syncStorage();
-      this.openCart();
-    });
+    this.setState(
+      {
+        cart: tempCart
+      },
+      () => {
+        this.addTotals();
+        this.syncStorage();
+        this.openCart();
+      }
+    );
   };
 
   setSingleProduct = id => {
