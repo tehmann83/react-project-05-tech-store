@@ -22,7 +22,7 @@ class ProductProvider extends Component {
     filteredProducts: [],
     featuredProducts: [],
     singleProduct: {},
-    loading: false
+    loading: true
   };
 
   componentDidMount() {
@@ -45,7 +45,7 @@ class ProductProvider extends Component {
         featuredProducts,
         cart: this.getStorageCart(),
         singleProduct: this.getStorageProduct(),
-        loading: true
+        loading: false
       },
       () => {
         this.addTotals();
