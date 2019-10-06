@@ -126,7 +126,6 @@ class ProductProvider extends Component {
       () => {
         this.addTotals();
         this.syncStorage();
-        this.openCart();
       }
     );
   };
@@ -155,38 +154,38 @@ class ProductProvider extends Component {
 
   // cart functionality
 
-  increment = id => {
+  handleCartItemAmount = (id, direction) => {
     let tempCart = [...this.state.cart];
     const cartItem = tempCart.find(item => item.id === id);
-    cartItem.count++;
-    cartItem.total = cartItem.count * cartItem.price;
-    cartItem.total = parseFloat(cartItem.total.toFixed(2));
-    this.setState(
-      {
-        cart: tempCart
-      },
-      () => {
-        this.addTotals();
-        this.syncStorage();
-      }
-    );
+    if (direction === "up") {
+      cartItem.count++;
+    } else if (direction === "down") {
+      cartItem.count--;
+    }
+
+    if (cartItem.count === 0) {
+      this.removeItem(id);
+    } else {
+      cartItem.total = cartItem.count * cartItem.price;
+      cartItem.total = parseFloat(cartItem.total.toFixed(2));
+      this.setState(
+        {
+          cart: tempCart
+        },
+        () => {
+          this.addTotals();
+          this.syncStorage();
+        }
+      );
+    }
+  };
+
+  increment = id => {
+    this.handleCartItemAmount(id, "up");
   };
 
   decrement = id => {
-    let tempCart = [...this.state.cart];
-    const cartItem = tempCart.find(item => item.id === id);
-    cartItem.count--;
-    cartItem.total = cartItem.count * cartItem.price;
-    cartItem.total = parseFloat(cartItem.total.toFixed(2));
-    this.setState(
-      {
-        cart: [...tempCart]
-      },
-      () => {
-        this.addTotals();
-        this.syncStorage();
-      }
-    );
+    this.handleCartItemAmount(id, "down");
   };
 
   removeItem = id => {
@@ -198,7 +197,12 @@ class ProductProvider extends Component {
     });
   };
 
-  clearCart = () => {};
+  clearCart = () => {
+    this.setState({ cart: [] }, () => {
+      this.addTotals();
+      this.syncStorage();
+    });
+  };
 
   render() {
     return (
