@@ -22,7 +22,13 @@ class ProductProvider extends Component {
     filteredProducts: [],
     featuredProducts: [],
     singleProduct: {},
-    loading: true
+    loading: true,
+    search: "",
+    price: 0,
+    minPrice: 0,
+    maxPrice: 0,
+    company: "all",
+    shipping: false
   };
 
   componentDidMount() {
@@ -38,6 +44,8 @@ class ProductProvider extends Component {
       return product;
     });
     let featuredProducts = storeProducts.filter(item => item.featured === true);
+
+    let maxPrice = Math.max(...storeProducts.map(item => item.price));
     this.setState(
       {
         storeProducts,
@@ -45,7 +53,9 @@ class ProductProvider extends Component {
         featuredProducts,
         cart: this.getStorageCart(),
         singleProduct: this.getStorageProduct(),
-        loading: false
+        loading: false,
+        price: maxPrice,
+        maxPrice: maxPrice
       },
       () => {
         this.addTotals();
@@ -204,6 +214,10 @@ class ProductProvider extends Component {
     });
   };
 
+  handleChange = event => {};
+
+  sortData = () => {};
+
   render() {
     return (
       <ProductContext.Provider
@@ -218,7 +232,8 @@ class ProductProvider extends Component {
           increment: this.increment,
           decrement: this.decrement,
           removeItem: this.removeItem,
-          clearCart: this.clearCart
+          clearCart: this.clearCart,
+          handleChange: this.handleChange
         }}
       >
         {this.props.children}
