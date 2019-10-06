@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { ProductConsumer } from "../../context/Context";
+import { log } from "util";
+import { CLIENT_RENEG_LIMIT } from "tls";
 
 export default function ProductFilter() {
   return (
@@ -16,6 +18,14 @@ export default function ProductFilter() {
           handleChange,
           storeProducts
         } = value;
+
+        let companies = new Set();
+        companies.add("all");
+        // TODO: use .reduce() one-liner instead of forEach()
+        storeProducts.forEach(product => {
+          companies.add(product.company);
+        });
+        companies = [...companies];
         return (
           <div className="row my-5">
             <div className="col-10 mx-auto">
@@ -40,9 +50,13 @@ export default function ProductFilter() {
                     onChange={handleChange}
                     value={company}
                   >
-                    <option value="all">all</option>
-                    <option value="htc">htc</option>
-                    <option value="samsung">samsung</option>
+                    {companies.map((company, index) => {
+                      return (
+                        <option key={index} value={company}>
+                          {company}
+                        </option>
+                      );
+                    })}
                   </select>
                 </div>
                 <div>
@@ -71,7 +85,7 @@ export default function ProductFilter() {
                     name="shipping"
                     id="shipping"
                     onChange={handleChange}
-                    value={shipping && true}
+                    checked={shipping && true}
                   />
                 </div>
               </FilterWrapper>
@@ -94,7 +108,8 @@ const FilterWrapper = styled.div`
     text-transform: capitalize;
   }
 
-  .filter-item, filter-price {
+  .filter-item,
+  filter-price {
     display: block;
     width: 100%;
     background: transparent;
