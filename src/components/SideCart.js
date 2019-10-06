@@ -12,7 +12,7 @@ export default function SideCart() {
           <CartWrapper show={cartOpen} onClick={closeCart}>
             <ul>
               {cart.map(item => {
-                console.log("item: ", item);
+                //console.log("item: ", item);
                 return (
                   <li key={item.id} className="cart-item mb-4">
                     <img width="35" src={`../${item.image}`}/*{item.image}*/ alt={item.title} />

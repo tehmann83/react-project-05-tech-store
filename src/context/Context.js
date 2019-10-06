@@ -155,24 +155,50 @@ class ProductProvider extends Component {
 
   // cart functionality
 
-  increment = (id) => {
-    alert(id)
-  }
-  
-  decrement = (id) => {
+  increment = id => {
+    let tempCart = [...this.state.cart];
+    const cartItem = tempCart.find(item => item.id === id);
+    cartItem.count++;
+    cartItem.total = cartItem.count * cartItem.price;
+    cartItem.total = parseFloat(cartItem.total.toFixed(2));
+    this.setState(
+      {
+        cart: tempCart
+      },
+      () => {
+        this.addTotals();
+        this.syncStorage();
+      }
+    );
+  };
 
-  }
+  decrement = id => {
+    let tempCart = [...this.state.cart];
+    const cartItem = tempCart.find(item => item.id === id);
+    cartItem.count--;
+    cartItem.total = cartItem.count * cartItem.price;
+    cartItem.total = parseFloat(cartItem.total.toFixed(2));
+    this.setState(
+      {
+        cart: [...tempCart]
+      },
+      () => {
+        this.addTotals();
+        this.syncStorage();
+      }
+    );
+  };
 
-  removeItem = (id) => {
-    alert( id)
-  }
-  
-  clearCart = () => {
-    
-  }
-  
+  removeItem = id => {
+    let tempCart = [...this.state.cart];
+    tempCart = tempCart.filter(item => item.id !== id);
+    this.setState({ cart: [...tempCart] }, () => {
+      this.addTotals();
+      this.syncStorage();
+    });
+  };
 
-  
+  clearCart = () => {};
 
   render() {
     return (
