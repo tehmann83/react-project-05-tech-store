@@ -156,15 +156,15 @@ class ProductProvider extends Component {
   // cart functionality
 
   increment = (id) => {
-    
+    alert(id)
   }
   
   decrement = (id) => {
-    
+
   }
 
   removeItem = (id) => {
-    
+    alert( id)
   }
   
   clearCart = () => {
